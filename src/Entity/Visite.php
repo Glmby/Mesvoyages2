@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\VisiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VisiteRepository::class)]
@@ -13,33 +12,32 @@ class Visite
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(length: 50)]
-    private ?string $ville = null;
+    #[ORM\Column(type: 'string', length: 50)]
+    private $ville;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $datecreation = null;
+    #[ORM\Column(type: 'string', length: 50)]
+    private $pays;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $note = null;
+    #[ORM\Column(type: 'date', nullable: true)]
+    private $datecreation;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $avis = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $note;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $tempmin = null;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $avis;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $tempmax = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $tempmin;
 
-    #[ORM\Column(length: 50)]
-    private ?string $pays = null;
-/**
- * [ORM\ManyToMany(targetEntity: environnement::class)]
- */
-    private Collection $environnements;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $tempmax;
+
+    #[ORM\ManyToMany(targetEntity: Environnement::class)]
+    private $environnements;
 
     public function __construct()
     {
@@ -51,7 +49,6 @@ class Visite
         return $this->id;
     }
 
-
     public function getVille(): ?string
     {
         return $this->ville;
@@ -60,6 +57,18 @@ class Visite
     public function setVille(string $ville): self
     {
         $this->ville = $ville;
+
+        return $this;
+    }
+
+    public function getPays(): ?string
+    {
+        return $this->pays;
+    }
+
+    public function setPays(string $pays): self
+    {
+        $this->pays = $pays;
 
         return $this;
     }
@@ -123,8 +132,7 @@ class Visite
 
         return $this;
     }
-    
-    public function getDatecreationString(): string
+      public function getDatecreationString(): string
     {
         if($this->datecreation==null){
             return "";
@@ -134,40 +142,27 @@ class Visite
         }
     }
 
-    public function getPays(): ?string
-    {
-        return $this->pays;
-    }
+      /**
+       * @return Collection<int, Environnement>
+       */
+      public function getEnvironnements(): Collection
+      {
+          return $this->environnements;
+      }
 
-    public function setPays(string $pays): self
-    {
-        $this->pays = $pays;
+      public function addEnvironnement(Environnement $environnement): self
+      {
+          if (!$this->environnements->contains($environnement)) {
+              $this->environnements[] = $environnement;
+          }
 
-        return $this;
-    }
+          return $this;
+      }
 
-    /**
-     * @return Collection<int, environnement>
-     */
-    public function getEnvironnements(): Collection
-    {
-        return $this->environnements;
-    }
+      public function removeEnvironnement(Environnement $environnement): self
+      {
+          $this->environnements->removeElement($environnement);
 
-    public function addEnvironnement(environnement $environnement): self
-    {
-        if (!$this->environnements->contains($environnement)) {
-            $this->environnements->add($environnement);
-        }
-
-        return $this;
-    }
-
-    public function removeEnvironnement(environnement $environnement): self
-    {
-        $this->environnements->removeElement($environnement);
-
-        return $this;
-    }
+          return $this;
+      }
 }
-

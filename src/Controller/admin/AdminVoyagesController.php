@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
-
 class AdminVoyagesController extends AbstractController {
     /**
      * @Route ("/admin", name="admin.voyages")
@@ -36,7 +34,7 @@ class AdminVoyagesController extends AbstractController {
         $this->repository=$repository;
     }
     /**
-     * @Route("/admin/suprr/{id}", name="admin.voyage.suppr")
+     * @Route("admin/suppr/{id}", name="admin.voyage.suppr")
      * @param Visite $visite
      * @return Response
      */
@@ -50,40 +48,35 @@ class AdminVoyagesController extends AbstractController {
      * @param Request $request
      * @return Response
      */
-    public function edit(Visite $visite, Request $request):Response{
-        $formVisite= $this->createForm(VisiteType::class, $visite);
+    public function edit(Visite $visite, Request $request): Response{
+        $formVisite = $this->createForm(VisiteType::class, $visite);
         
         $formVisite->handleRequest($request);
-        if($formVisite->isSubmitted()&& $formVisite->isValid()){
+        if($formVisite->isSubmitted() && $formVisite->isValid()){
             $this->repository->add($visite, true);
             return $this->redirectToRoute('admin.voyages');
         }
-        
-        return $this->render("admin/admin.voyage.edit.html.twig",[
-            'visite'=> $visite,
-            'formVisite'=> $formVisite->createView()
+        return $this->render("admin/admin.voyage.edit.html.twig", [
+            'visite' => $visite,
+            'formvisite' => $formVisite->createView()
         ]);
     }
-    /**
+     /**
      * @Route("/admin/ajout", name="admin.voyage.ajout")
      * @param Request $request
      * @return Response
      */
-    
-    public function ajout(Request $request):Response{
-        $visite= new Visite();
-        $formVisite= $this->createForm(VisiteType::class, $visite);
+    public function ajout(Request $request): Response{
+       $visite = new Visite();
+       $formVisite = $this->createForm(VisiteType::class, $visite);
         
         $formVisite->handleRequest($request);
-        if($formVisite->isSubmitted()&& $formVisite->isValid()){
+        if($formVisite->isSubmitted() && $formVisite->isValid()){
             $this->repository->add($visite, true);
             return $this->redirectToRoute('admin.voyages');
         }
-        
-        return $this->render("admin/admin.voyage.ajout.html.twig",[
-            'visite'=> $visite,
-            'formVisite'=> $formVisite->createView()
+        return $this->render("admin/admin.voyage.ajout.html.twig", [
+            'visite' => $visite,
+            'formvisite' => $formVisite->createView()
         ]);
-    }
-}
-
+}   }
