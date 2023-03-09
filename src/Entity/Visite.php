@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VisiteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,15 @@ class Visite
 
     #[ORM\Column(length: 50)]
     private ?string $pays = null;
+/**
+ * [ORM\ManyToMany(targetEntity: environnement::class)]
+ */
+    private Collection $environnements;
+
+    public function __construct()
+    {
+        $this->environnements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -131,6 +142,30 @@ class Visite
     public function setPays(string $pays): self
     {
         $this->pays = $pays;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, environnement>
+     */
+    public function getEnvironnements(): Collection
+    {
+        return $this->environnements;
+    }
+
+    public function addEnvironnement(environnement $environnement): self
+    {
+        if (!$this->environnements->contains($environnement)) {
+            $this->environnements->add($environnement);
+        }
+
+        return $this;
+    }
+
+    public function removeEnvironnement(environnement $environnement): self
+    {
+        $this->environnements->removeElement($environnement);
 
         return $this;
     }
